@@ -56,10 +56,25 @@ app.delete("/api/persons/:id", (req, res) => {
 });
 
 app.post("/api/persons", (req, res) => {
-  const person = req.body;
-  person.id = Math.floor(Math.random() * 10000);
+  const body = req.body;
+  const personNames = persons.map((person) => `${person.name.toLowerCase()}`);
+
+  if (!body.name || !body.number) {
+    return res.status(400).json({
+      error: "content missing",
+    });
+  } else if (personNames.includes(body.name.toLowerCase())) {
+    return res.status(400).json({
+      error: "name has to be unique",
+    });
+  }
+
+  const person = {
+    id: Math.floor(Math.random() * 10000),
+    name: body.name,
+    number: body.number,
+  };
   persons = persons.concat(person);
-  console.log(persons);
   res.json(person);
 });
 
