@@ -1,54 +1,54 @@
-require("dotenv").config();
-const express = require("express");
-const morgan = require("morgan");
-const cors = require("cors");
+require('dotenv').config();
+const express = require('express');
+const morgan = require('morgan');
+const cors = require('cors');
 const app = express();
-const Person = require("./models/person");
+const Person = require('./models/person');
 
-app.use(express.static("build"));
+app.use(express.static('build'));
 app.use(cors());
 app.use(express.json());
 
-morgan.token("person", (req, res) => {
+morgan.token('person', (req) => {
   return JSON.stringify(req.body);
 });
 
 app.use(
   morgan(
-    ":method :url :status :res[content-length] - :response-time ms :person"
+    ':method :url :status :res[content-length] - :response-time ms :person'
   )
 );
 
 // let persons = [
 //   {
 //     id: 1,
-//     name: "Arto Hellas",
-//     number: "040-123456",
+//     name: 'Arto Hellas',
+//     number: '040-123456',
 //   },
 //   {
 //     id: 2,
-//     name: "Ada Lovelace",
-//     number: "39-44-5323523",
+//     name: 'Ada Lovelace',
+//     number: '39-44-5323523',
 //   },
 //   {
 //     id: 3,
-//     name: "Dan Abramov",
-//     number: "12-43-234345",
+//     name: 'Dan Abramov',
+//     number: '12-43-234345',
 //   },
 //   {
 //     id: 4,
-//     name: "Mary Poppendieck",
-//     number: "39-23-6423122",
+//     name: 'Mary Poppendieck',
+//     number: '39-23-6423122',
 //   },
 // ];
 
-app.get("/api/persons", (request, response) => {
+app.get('/api/persons', (request, response) => {
   Person.find({}).then((persons) => {
     response.json(persons);
   });
 });
 
-app.get("/api/persons/:id", (req, res, next) => {
+app.get('/api/persons/:id', (req, res, next) => {
   // const id = Number(req.params.id);
   // const person = persons.find((person) => id === person.id);
 
@@ -62,39 +62,39 @@ app.get("/api/persons/:id", (req, res, next) => {
       if (person) {
         res.json(person);
       } else {
-        response.status(404).end();
+        res.status(404).end();
       }
     })
     .catch((error) => next(error));
 });
 
-app.get("/info", (request, response) => {
+app.get('/info', (request, response) => {
   const date = new Date();
   response.send(
-    `<div>Phonebook has info for ${persons.length} people</div><br><div>${date}</div>`
+    `<div>Phonebook has info for people</div><br><div>${date}</div>`
   );
 });
 
-app.delete("/api/persons/:id", (req, res, next) => {
+app.delete('/api/persons/:id', (req, res, next) => {
   Person.findByIdAndRemove(req.params.id)
-    .then((result) => {
+    .then((res) => {
       res.status(204).end();
     })
     .catch((error) => next(error));
 });
 
-app.post("/api/persons", (req, res, next) => {
+app.post('/api/persons', (req, res, next) => {
   const body = req.body;
   // const personNames = persons.map((person) => `${person.name.toLowerCase()}`);
 
   if (!body.name || !body.number) {
     return res.status(400).json({
-      error: "content missing",
+      error: 'content missing',
     });
   }
   // else if (personNames.includes(body.name.toLowerCase())) {
   //   return res.status(400).json({
-  //     error: "name has to be unique",
+  //     error: 'name has to be unique',
   //   });
   // }
 
@@ -113,8 +113,8 @@ app.post("/api/persons", (req, res, next) => {
 const errorHandler = (error, req, res, next) => {
   console.error(error.message);
 
-  if (error.name === "CastError") {
-    return res.status(400).send({ error: "wrong id" });
+  if (error.name === 'CastError') {
+    return res.status(400).send({ error: 'wrong id' });
   }
 
   next(error);

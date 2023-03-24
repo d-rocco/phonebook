@@ -1,7 +1,7 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 if (process.argv.length < 5 && process.argv.length > 3) {
-  console.log("give all arguments!");
+  console.log('give all arguments!');
   process.exit(1);
 }
 
@@ -11,7 +11,7 @@ const number = process.argv[4];
 
 const url = `mongodb+srv://dhrocco:${password}@cluster.i0ki2pf.mongodb.net/phonebookApp?retryWrites=true&w=majority`;
 
-mongoose.set("strictQuery", false);
+mongoose.set('strictQuery', false);
 mongoose.connect(url);
 
 const personSchema = new mongoose.Schema({
@@ -19,7 +19,7 @@ const personSchema = new mongoose.Schema({
   number: String,
 });
 
-const Person = mongoose.model("Person", personSchema);
+const Person = mongoose.model('Person', personSchema);
 
 const person = new Person({
   name,
@@ -27,7 +27,7 @@ const person = new Person({
 });
 
 if (process.argv.length === 3) {
-  console.log("phonebook:");
+  console.log('phonebook:');
   Person.find({}).then((result) => {
     result.forEach((note) => {
       console.log(`${note.name} ${note.number}`);
